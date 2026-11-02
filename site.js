@@ -21,7 +21,7 @@
 
   const renderAirbnbControls = () => {
     const card = document.querySelector("#work .project:nth-child(2)");
-    if (!card || card.querySelector(".project-actions")) return;
+    if (!card) return;
 
     const actions = document.createElement("div");
     actions.className = "project-actions";
@@ -39,7 +39,9 @@
     live.dataset.airbnbLive = "";
 
     actions.append(details, live);
-    card.insertBefore(actions, card.querySelector(".visual"));
+    const existing = card.querySelector(".project-actions");
+    if (existing) existing.append(...actions.children);
+    else card.insertBefore(actions, card.querySelector(".visual"));
 
     const dialog = document.createElement("dialog");
     dialog.id = "airbnb-detail";
@@ -86,7 +88,9 @@
       link.rel = "noreferrer";
       link.dataset.presentation = "";
       actions.append(link);
-      card.insertBefore(actions, card.querySelector(".visual"));
+      const existing = card.querySelector(".project-actions");
+    if (existing) existing.append(...actions.children);
+    else card.insertBefore(actions, card.querySelector(".visual"));
     });
   };
 
@@ -158,6 +162,9 @@
     updateAirbnb(currentLanguage);
     updateWechat(currentLanguage);
     updatePresentations(currentLanguage);
+    document.querySelectorAll("[data-project-source]").forEach((link) => {
+      link.textContent = content[currentLanguage].github;
+    });
 
     document.querySelectorAll(".lang-btn").forEach((button) => {
       const active = button.dataset.lang === currentLanguage;
